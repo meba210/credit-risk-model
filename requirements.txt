@@ -7,3 +7,6 @@ jupyter
 mlflow
 sklearn
 pytest
+fastapi
+uvicorn
+flake8
