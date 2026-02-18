@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import timedelta
 from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
-
+from typing import Tuple
 
 # -----------------------------
 # RFM FEATURE ENGINEERING
@@ -98,3 +98,14 @@ def create_proxy_target(df: pd.DataFrame) -> pd.DataFrame:
     df = merge_target(df, rfm)
 
     return df
+
+
+def clean_data(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.drop_duplicates()
+    df = df.fillna(0)
+    return df
+
+def split_features_target(df: pd.DataFrame, target: str) -> Tuple[pd.DataFrame, pd.Series]:
+    X = df.drop(columns=[target])
+    y = df[target]
+    return X, y

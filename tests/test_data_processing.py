@@ -1,4 +1,5 @@
 from src.data_processing import calculate_rfm
+import pandas as pd
 
 def test_rfm_columns():
     df = pd.DataFrame({

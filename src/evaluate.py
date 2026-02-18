@@ -1,16 +1,22 @@
 import shap
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+import matplotlib.pyplot as plt
 
-def shap_explain(model: RandomForestClassifier, X: pd.DataFrame):
-    """
-    Generate SHAP values for model explainability and visualize them.
-    """
+def generate_shap_plots(model, X: pd.DataFrame):
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(X)
 
-    # Summary plot for global feature importance
-    shap.summary_plot(shap_values, X, plot_type="bar")
+    # Global importance
+    shap.summary_plot(shap_values, X, show=False)
+    plt.savefig("shap_summary.png")
+    plt.close()
 
-    # Example: local explanation for first instance
-    shap.force_plot(explainer.expected_value[1], shap_values[1][0,:], X.iloc[0,:])
+    # Local explanation for first instance
+    shap.force_plot(
+        explainer.expected_value[1],
+        shap_values[1][0],
+        X.iloc[0],
+        matplotlib=True
+    )
+    plt.savefig("shap_local.png")
+    plt.close()
