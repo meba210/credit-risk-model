@@ -1,11 +1,14 @@
 from fastapi import FastAPI
-import mlflow.sklearn
+import pandas as pd
+from utils.model_utils import load_model
+from src.api.schemas import CustomerInput, PredictionOutput
 
 app = FastAPI()
 
-model = mlflow.sklearn.load_model("models:/credit-risk-model/Production")
+model = load_model("model.joblib")
 
-@app.post("/predict")
-def predict(data: dict):
-    prob = model.predict_proba(pd.DataFrame([data]))[:, 1]
-    return {"risk_probability": float(prob)}
+@app.post("/predict", response_model=PredictionOutput)
+def predict(data: CustomerInput):
+    df = pd.DataFrame([data.dict()])
+    probability = model.predict_proba(df)[0][1]
+    return PredictionOutput(risk_probability=probability)
